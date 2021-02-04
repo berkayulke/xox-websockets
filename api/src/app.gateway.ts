@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { MessageBody, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse, } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { SocketMessage } from '../../shared/socket-message.model'
 
 @WebSocketGateway()
 export class AppGateway implements OnGatewayInit {
@@ -14,9 +15,10 @@ export class AppGateway implements OnGatewayInit {
   }
 
   @SubscribeMessage('message')
-  handleMessage(@MessageBody() body: string): WsResponse<string> {
-    this.logger.log("Got the following message from a client",body)
-    return { event: 'message', data: 'Hello world!' };
+  handleMessage(@MessageBody() body: SocketMessage): WsResponse<SocketMessage> {
+    this.logger.log("Got the following message from a client: ")
+    console.log(body)
+    return { event: 'message', data: new SocketMessage('Hello from api') };
   }
 
 }
