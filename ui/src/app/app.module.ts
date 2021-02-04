@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SocketIoModule } from 'ngx-socket-io';
 
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
-import { CommonModule } from '@angular/common';
 import { BoardRowComponent } from './board/board-row/board-row.component';
 import { BoardSquareComponent } from './board/board-row/board-square/board-square.component';
+import { GameService } from './services/game.service';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,10 @@ import { BoardSquareComponent } from './board/board-row/board-square/board-squar
   ],
   imports: [
     BrowserModule,
-    CommonModule
+    CommonModule,
+    SocketIoModule.forRoot({ url: 'http://localhost:3000' })
   ],
-  providers: [],
+  providers: [GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
