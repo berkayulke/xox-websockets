@@ -1,5 +1,4 @@
 <div class="board">
-    <app-board-row [index]="0"></app-board-row>
-    <app-board-row [index]="1"></app-board-row>
-    <app-board-row [index]="2"></app-board-row>
+    <app-board-row *ngFor="let row of gameService.board;let i = index"
+                   [rowIndex]="i"></app-board-row>
 </div>

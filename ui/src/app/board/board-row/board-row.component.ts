@@ -8,17 +8,18 @@ import { GameService } from 'src/app/services/game.service';
 })
 export class BoardRowComponent implements OnInit {
 
-  @Input() index: number
+  @Input() rowIndex: number
 
   constructor(
     public gameService: GameService
   ) { }
 
   ngOnInit(): void {
+    console.log(this.rowIndex)
   }
 
   onClick(squareIndex: number) {
-    this.gameService.onSquareClick(this.index, squareIndex)
+    this.gameService.onSquareClick(this.rowIndex, squareIndex)
   }
 
 }
