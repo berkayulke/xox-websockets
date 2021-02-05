@@ -7,7 +7,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class BoardSquareComponent implements OnInit {
 
-  @Output() onClick = new EventEmitter<void>()
+  @Output() onClick = new EventEmitter<number>()
 
   constructor() { }
 
