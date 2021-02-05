@@ -6,8 +6,13 @@ export type Board = Array<BoardRow>
 export class Game {
 
   board: Board
-  turn: 'X' | 'O' = 'X'
-  winner: 'X' | 'O' = null
+  turn: Player = 'X'
+  get winner(): Player | null {
+    if (!this._winner)
+      this._winner = this.getWinner()
+    return this._winner
+  }
+  private _winner: Player
 
   get isOver(): boolean {
     return !!this.winner
@@ -23,10 +28,19 @@ export class Game {
         this.board[i][j] = "";
   }
 
-  getWinner(): Player | null {
+  private getWinner(): Player | null {
     return this.getHorizontalWinner() ??
       this.getVerticalWinner() ??
       this.getCrossWinner()
+  }
+
+  makeMove(rowIndex: number, columnIndex: number) {
+    this.board[rowIndex][columnIndex] = this.turn
+    this.changeTurns()
+  }
+
+  private changeTurns() {
+    this.turn = this.turn == 'X' ? 'O' : 'X'
   }
 
   private getHorizontalWinner(board = this.board): Player | null {

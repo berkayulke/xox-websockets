@@ -4,24 +4,24 @@ import { Game } from './game.model';
 @Injectable()
 export class GameService {
 
-  private games: Game[] = []
+  private games: { [key: string]: Game }
 
-  createGame(): Game {
+  createGame(): string {
     const game = new Game(this.generateId())
-    this.games.push(game)
-    return game
+    this.games[game.id] = game
+    return game.id
   }
 
   getById(id: string): Game {
-    return this.games.find(g => g.id === id)
+    return this.games[id]
   }
 
   deleteById(id: string): void {
-    this.games = this.games.filter(g => g.id !== id)
+    delete this.games[id]
   }
 
   private generateId(): string {
-    return Math.random().toString()
+    return "1"
   }
 
 }

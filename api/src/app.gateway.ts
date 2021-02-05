@@ -16,13 +16,18 @@ export class AppGateway {
 
   @SubscribeMessage('startNewGame')
   onStartNewGame(): WsResponse<string> {
-    const game = this.gameService.createGame()
-    return { event: 'startNewGame', data: game.id }
+    const gameId = this.gameService.createGame()
+    return { event: 'startNewGame', data: gameId }
   }
 
   @SubscribeMessage('playerMove')
   onPlayerMove(@MessageBody() body: SocketMessage): void {
-    this.wss.emit('playerMove' + body.gameId, body)
+    const { rowIndex, squareIndex, gameId } = body
+    const game = this.gameService.getById(gameId)
+    if (!game) throw new Error("Can't find game")
+    this.wss.emit(`playerMove:${gameId}`, { rowIndex, squareIndex })
+    if (game.isOver)
+      this.wss.emit(`gameOver:${gameId}`, { winner: game.winner })
   }
 
 }
