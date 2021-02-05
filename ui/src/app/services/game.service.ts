@@ -119,7 +119,7 @@ export class GameService {
         }
         else{
           this.flag=true;
-          console.log("1.oyuncu kazandı!");
+          console.log("2.oyuncu kazandı!");
           return;
         }
       }
@@ -140,7 +140,7 @@ export class GameService {
         }
         else{
           this.flag=true;
-          console.log("1.oyuncu kazandı!");
+          console.log("2.oyuncu kazandı!");
           return;
         }
       }
