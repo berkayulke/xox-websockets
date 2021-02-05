@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-board-square',
@@ -7,9 +8,14 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class BoardSquareComponent implements OnInit {
 
-  @Output() onClick = new EventEmitter<number>()
+  @Input() rowIndex: number
+  @Input() squareIndex: number
 
-  constructor() { }
+  @Output() onClick = new EventEmitter<void>()
+
+  constructor(
+    public gameService: GameService
+  ) { }
 
   ngOnInit(): void {
   }

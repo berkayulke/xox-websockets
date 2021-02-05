@@ -7,6 +7,12 @@ import { SocketMessage } from '../../../../shared/socket-message.model'
 })
 export class GameService {
 
+  board = [
+    ['', '', ''],
+    ['', '', ''],
+    ['', '', ''],
+  ]
+
   constructor(
     private readonly socket: Socket
   ) {
@@ -14,4 +20,9 @@ export class GameService {
     const messageToServer = new SocketMessage('Hello from ui')
     this.socket.emit('message', messageToServer)
   }
+
+  onSquareClick(rowIndex: number, squareIndex: number) {
+    console.log(rowIndex, squareIndex)
+  }
+
 }

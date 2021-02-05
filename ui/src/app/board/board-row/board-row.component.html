@@ -1,5 +1,18 @@
 <div class="board-row-container">
+
     <app-board-square class="board-square"
-                      *ngFor="let i of [1,2,3]"
-                      (onClick)="onSquareClick(i)"></app-board-square>
+                      (onClick)="onClick(0)"
+                      [rowIndex]="index"
+                      [squareIndex]="0"></app-board-square>
+
+    <app-board-square class="board-square"
+                      (onClick)="onClick(1)"
+                      [rowIndex]="index"
+                      [squareIndex]="1"></app-board-square>
+
+    <app-board-square class="board-square"
+                      (onClick)="onClick(2)"
+                      [rowIndex]="index"
+                      [squareIndex]="2"></app-board-square>
+
 </div>

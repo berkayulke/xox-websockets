@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { GameService } from 'src/app/services/game.service';
 
 @Component({
   selector: 'app-board-row',
@@ -9,13 +10,15 @@ export class BoardRowComponent implements OnInit {
 
   @Input() index: number
 
-  constructor() { }
+  constructor(
+    public gameService: GameService
+  ) { }
 
   ngOnInit(): void {
   }
 
-  onSquareClick(squareIndex: number) {
-    console.log(this.index + '. satırın ' + squareIndex + '. karesine basıldı')
+  onClick(squareIndex: number) {
+    this.gameService.onSquareClick(this.index, squareIndex)
   }
 
 }

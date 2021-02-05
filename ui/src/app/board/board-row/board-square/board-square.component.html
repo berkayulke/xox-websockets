@@ -1,4 +1,4 @@
 <div class="board-square"
-     (click)="onClick.emit(42)">
-    <p>X</p>
+     (click)="onClick.emit()">
+    <p>{{gameService.board[rowIndex][squareIndex]}}</p>
 </div>
