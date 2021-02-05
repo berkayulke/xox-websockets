@@ -9,7 +9,7 @@ import { GameService } from './services/game.service';
 export class AppComponent {
 
   constructor(
-    private readonly gameService: GameService
+    public gameService: GameService
   ) { }
   
 }

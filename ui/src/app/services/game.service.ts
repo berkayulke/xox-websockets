@@ -7,6 +7,8 @@ import { SocketMessage } from '../../../../shared/socket-message.model'
 })
 export class GameService {
 
+  boardSize : number = 3;
+
   board = [
     ['', '', ''],
     ['', '', ''],
@@ -23,6 +25,17 @@ export class GameService {
     this.socket.on('message', (data: SocketMessage) => console.log(data))
     const messageToServer = new SocketMessage('Hello from ui')
     this.socket.emit('message', messageToServer)
+  }
+
+  resetGame(){
+    console.log("Yeniden başlatılyor...");
+    for(let i=0;i<3;i++){
+      for(let j=0;j<3;j++){
+        this.board[i][j]="";
+      }
+    }
+    this.flag=false;
+    this.tour=0;
   }
 
   onSquareClick(rowIndex: number, squareIndex: number) {
