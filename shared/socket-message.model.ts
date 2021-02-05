@@ -1,7 +1,7 @@
 export class SocketMessage {
-
-  constructor(
-    public message: string
-  ) { }
+  rowIndex: number
+  squareIndex: number
+  gameId: null
+  turn: 'X' | 'O'
 
 }

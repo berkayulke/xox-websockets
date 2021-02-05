@@ -16,8 +16,6 @@ export class GameService {
     private readonly socket: Socket
   ) {
     this.socket.on('message', (data: SocketMessage) => console.log(data))
-    const messageToServer = new SocketMessage('Hello from ui')
-    this.socket.emit('message', messageToServer)
 
     for (let i = 0; i < this.boardSize; i++) {
       const row = [];
@@ -44,6 +42,10 @@ export class GameService {
     if (this.flag) {
       return;
     }
+
+    if (this.board[rowIndex][squareIndex] == '')
+      this.notifyApiWithPlayerMove(rowIndex, squareIndex)
+
     console.log(rowIndex, squareIndex)
     if (this.tour % 2 == 0) {
       if (this.board[rowIndex][squareIndex] == '') {
@@ -92,4 +94,9 @@ export class GameService {
       this.flag = true;
     }
   }
+
+  private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {
+    this.socket.emit('playerMove', { rowIndex, squareIndex })
+  }
+
 }
