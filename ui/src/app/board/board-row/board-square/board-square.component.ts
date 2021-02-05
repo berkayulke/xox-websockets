@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-board-square',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./board-square.component.scss']
 })
 export class BoardSquareComponent implements OnInit {
+
+  @Output() onClick = new EventEmitter<void>()
 
   constructor() { }
 
