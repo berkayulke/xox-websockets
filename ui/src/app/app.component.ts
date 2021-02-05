@@ -12,5 +12,4 @@ export class AppComponent {
     private readonly gameService: GameService
   ) { }
   
-  
 }
