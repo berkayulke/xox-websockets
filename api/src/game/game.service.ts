@@ -12,6 +12,14 @@ export class GameService {
     return game
   }
 
+  getById(id: string): Game {
+    return this.games.find(g => g.id === id)
+  }
+
+  deleteById(id: string): void {
+    this.games = this.games.filter(g => g.id !== id)
+  }
+
   private generateId(): string {
     return Math.random().toString()
   }
