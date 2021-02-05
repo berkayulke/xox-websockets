@@ -20,7 +20,7 @@ export class GameService {
     this.socket.emit('message', messageToServer)
 
     for (let i = 0; i < this.boardSize; i++) {
-      const row = [];
+      const row:string[] = [];
       for (let j = 0; j < this.boardSize; j++) {
         row.push('')
       }
@@ -31,8 +31,8 @@ export class GameService {
 
   resetGame() {
     console.log("Yeniden başlatılyor...");
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
+    for (let i = 0; i < this.boardSize; i++) {
+      for (let j = 0; j < this.boardSize; j++) {
         this.board[i][j] = "";
       }
     }
@@ -57,7 +57,95 @@ export class GameService {
         this.tour++;
       }
     }
-    for (let i = 0; i < 3; i++) {
+    for(let i=0;i<this.boardSize;i++){
+      let thereisawinner : boolean = true;
+      if(this.board[i][0]!=''){
+        for(let j=1;j<this.boardSize;j++){
+          if(this.board[i][j]!=this.board[i][0]){
+            thereisawinner = false;
+            break;
+          }
+        }
+        if(thereisawinner){
+          if(this.board[i][0]=='X'){
+            this.flag=true;
+            console.log("1.oyuncu kazandı!");
+            return;
+          }
+          else{
+            this.flag=true;
+            console.log("2.oyuncu kazandı!");
+            return;
+          }
+        }
+      }
+    }
+    for(let i=0;i<this.boardSize;i++){
+      let thereisawinner : boolean = true;
+      if(this.board[0][i]!=''){
+        for(let j=1;j<this.boardSize;j++){
+          if(this.board[j][i]!=this.board[0][i]){
+            thereisawinner = false;
+            break;
+          }
+        }
+        if(thereisawinner){
+          if(this.board[0][i]=='X'){
+            this.flag=true;
+            console.log("1.oyuncu kazandı!");
+            return;
+          }
+          else{
+            this.flag=true;
+            console.log("2.oyuncu kazandı!");
+            return;
+          }
+        }
+      }
+    }
+    if(this.board[0][0]!=""){
+      let thereisawinner : boolean = true;
+      for(let i=1;i<this.boardSize;i++){
+        if(this.board[i][i]!=this.board[0][0]){
+          thereisawinner=false;
+          break;
+        }
+      }
+      if(thereisawinner){
+        if(this.board[0][0]=='X'){
+          this.flag=true;
+          console.log("1.oyuncu kazandı!");
+          return;
+        }
+        else{
+          this.flag=true;
+          console.log("1.oyuncu kazandı!");
+          return;
+        }
+      }
+    }
+    if(this.board[0][this.boardSize-1]!=""){
+      let thereisawinner : boolean = true;
+      for(let i=1;i<this.boardSize;i++){
+        if(this.board[i][this.boardSize-i-1]!=this.board[0][this.boardSize-1]){
+          thereisawinner=false;
+          break;
+        }
+      }
+      if(thereisawinner){
+        if(this.board[0][this.boardSize-1]=='X'){
+          this.flag=true;
+          console.log("1.oyuncu kazandı!");
+          return;
+        }
+        else{
+          this.flag=true;
+          console.log("1.oyuncu kazandı!");
+          return;
+        }
+      }
+    }
+    /*for (let i = 0; i < 3; i++) {
       if (this.board[i][0] == "X" && this.board[i][0] == this.board[i][1] && this.board[i][0] == this.board[i][2]) {
         console.log("1.oyuncu kazandi!");
         this.flag = true;
@@ -90,6 +178,6 @@ export class GameService {
     if (this.board[0][2] == "O" && this.board[0][2] == this.board[1][1] && this.board[0][2] == this.board[2][0]) {
       console.log("2.oyuncu kazandi!");
       this.flag = true;
-    }
+    }*/
   }
 }
