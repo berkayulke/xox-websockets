@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { SocketMessage } from '../../../../shared/socket-message.model'
+import { Player } from '../../../../shared/game.types'
 
 const API_URL = 'http://localhost:3000'
 
@@ -45,7 +46,7 @@ export class GameService {
         })
 
 
-        this.socket.on(`gameOver:${this.gameId}`, (res: { winner: 'X' | 'O' }) => {
+        this.socket.on(`gameOver:${this.gameId}`, (res: { winner: Player }) => {
           console.log('winner is:', res.winner)
           this.isGameOver = true
         })
