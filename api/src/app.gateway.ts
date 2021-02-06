@@ -20,14 +20,14 @@ export class AppGateway {
     const game = this.gameService.getById(gameId)
     if (!game) throw new Error("Can't find game")
 
-    if (game.isOver)
+    if (game.isOver())
       return
 
     this.wss.emit(`playerMove:${gameId}`, { rowIndex, squareIndex, turn: game.turn })
     game.makeMove(rowIndex, squareIndex)
 
-    if (game.isOver)
-      this.wss.emit(`gameOver:${gameId}`, { winner: game.winner })
+    if (game.isOver())
+      this.wss.emit(`gameOver:${gameId}`, { winner: game.getWinner() })
   }
 
 }

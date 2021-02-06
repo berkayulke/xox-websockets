@@ -7,16 +7,12 @@ export class Game {
 
   board: Board
   turn: Player = 'X'
-  get winner(): Player | null {
-    if (!this._winner)
-      this._winner = this.getWinner()
-    return this._winner
-  }
-  private _winner: Player
 
-  get isOver(): boolean {
-    return !!this.winner
+  isOver(): boolean {
+    return !!this.getWinner()
   }
+
+  private _winner: Player
 
   constructor(
     public id: string,
@@ -30,10 +26,13 @@ export class Game {
     }
   }
 
-  private getWinner(): Player | null {
-    return this.getHorizontalWinner() ??
-      this.getVerticalWinner() ??
-      this.getCrossWinner()
+  getWinner(): Player | null {
+    if (!this._winner) {
+      this._winner = this.getHorizontalWinner() ??
+        this.getVerticalWinner() ??
+        this.getCrossWinner()
+    }
+    return this._winner
   }
 
   makeMove(rowIndex: number, columnIndex: number) {
