@@ -4,6 +4,7 @@ export class Game {
 
   board: Board
   turn: Player = 'X'
+  tour = 1
 
   isOver(): boolean {
     return !!this.getWinner()
@@ -33,6 +34,11 @@ export class Game {
   makeMove(rowIndex: number, squareIndex: number) {
     this.board[rowIndex][squareIndex] = this.turn
     this.changeTurns()
+    this.tour++
+  }
+
+  undoLastMove() {
+    //TODO add undo logic
   }
 
   private changeTurns() {
@@ -40,7 +46,11 @@ export class Game {
   }
 
   private findWinner(): Player | null {
-    //TODO move winner finding logic here
+    /*
+      TODO move winner finding logic here
+      If there is winner return 'X' or 'O'
+      else return null
+    */
     return null
   }
 

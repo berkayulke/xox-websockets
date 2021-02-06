@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { SocketMessage } from '../../../../shared/socket-message.model'
-import { Player } from '../../../../shared/game.types'
+import { Board, BoardRow } from '../../../../shared/game.types'
+import { GameOverResponse, PlayerMoveResponse, StartGameResponse } from '../../../../shared/api-response.model'
 
 const API_URL = 'http://localhost:3000'
 
@@ -12,7 +12,7 @@ const API_URL = 'http://localhost:3000'
 export class GameService {
 
   boardSize: number = 3;
-  board: string[][] = []
+  board: Board = []
   tour: number = 0;
   isGameOver: boolean = false;
 
@@ -23,7 +23,7 @@ export class GameService {
     private readonly http: HttpClient
   ) {
     for (let i = 0; i < this.boardSize; i++) {
-      const row: string[] = [];
+      const row: BoardRow = [];
       for (let j = 0; j < this.boardSize; j++) {
         row.push('')
       }
@@ -35,18 +35,18 @@ export class GameService {
 
   startNewGame() {
     this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
-      .subscribe((response: { gameId: string }) => {
+      .subscribe((response: StartGameResponse) => {
         this.finishGame()
         this.gameId = response.gameId
 
-        this.socket.on(`playerMove:${this.gameId}`, (res: SocketMessage) => {
+        this.socket.on(`playerMove:${this.gameId}`, (res: PlayerMoveResponse) => {
           if (this.isGameOver) return
           const { rowIndex, squareIndex, turn } = res
           this.board[rowIndex][squareIndex] = turn
         })
 
 
-        this.socket.on(`gameOver:${this.gameId}`, (res: { winner: Player }) => {
+        this.socket.on(`gameOver:${this.gameId}`, (res: GameOverResponse) => {
           console.log('winner is:', res.winner)
           this.isGameOver = true
         })

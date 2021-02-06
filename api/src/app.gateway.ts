@@ -1,11 +1,10 @@
-import { UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { SocketMessage } from '../../shared/socket-message.model'
+import { GameOverResponse, PlayerMoveResponse } from '../../shared/api-response.model';
+import { PlayerMoveRequest } from '../../shared/api-request.model'
 import { GameService } from './game/game.service';
 
 @WebSocketGateway()
-@UsePipes(new ValidationPipe({ transform: true }))
 export class AppGateway {
 
   @WebSocketServer() wss: Server
@@ -15,7 +14,7 @@ export class AppGateway {
   ) { }
 
   @SubscribeMessage('playerMove')
-  onPlayerMove(@MessageBody() body: SocketMessage): void {
+  onPlayerMove(@MessageBody() body: PlayerMoveRequest): void {
     const { rowIndex, squareIndex, gameId } = body
     const game = this.gameService.getById(gameId)
     if (!game) throw new Error("Can't find game")
@@ -23,11 +22,19 @@ export class AppGateway {
     if (game.isOver())
       return
 
-    this.wss.emit(`playerMove:${gameId}`, { rowIndex, squareIndex, turn: game.turn })
+    const playerMoveResponse: PlayerMoveResponse = {
+      rowIndex,
+      squareIndex,
+      turn: game.turn
+    }
+
+    this.wss.emit(`playerMove:${gameId}`, playerMoveResponse)
     game.makeMove(rowIndex, squareIndex)
 
-    if (game.isOver())
-      this.wss.emit(`gameOver:${gameId}`, { winner: game.getWinner() })
+    if (game.isOver()) {
+      const gameOverResponse: GameOverResponse = { winner: game.getWinner() }
+      this.wss.emit(`gameOver:${gameId}`, gameOverResponse)
+    }
   }
 
 }
