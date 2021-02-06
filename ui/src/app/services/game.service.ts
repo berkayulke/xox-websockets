@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { SocketMessage } from '../../../../shared/socket-message.model'
 
+const API_URL = 'http://localhost:3000'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,7 +33,7 @@ export class GameService {
   }
 
   startNewGame() {
-    this.http.post('http://localhost:3000/game/', { boardSize: this.boardSize })
+    this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
       .subscribe((response: { gameId: string }) => {
         this.finishGame()
         this.gameId = response.gameId
@@ -55,7 +57,7 @@ export class GameService {
     if (!this.gameId) return
     this.socket.removeListener(`playerMove:${this.gameId}`)
     this.socket.removeListener(`gameOver:${this.gameId}`)
-    this.http.get(`http://localhost:3000/game/${this.gameId}/finish`)
+    this.http.get(`${API_URL}/game/${this.gameId}/finish`)
       .subscribe()
   }
 
