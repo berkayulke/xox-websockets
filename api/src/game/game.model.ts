@@ -40,6 +40,8 @@ export class Game {
   undoLastMove(): { rowIndex: number, squareIndex: number } {
     //TODO add undo logic
     //return an with last move's row and square index
+    this.changeTurns()
+    this.tour--
     return {
       rowIndex: 0,
       squareIndex: 0

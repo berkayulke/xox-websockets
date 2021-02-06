@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Board, BoardRow } from '../../../../shared/game.types'
-import { GameOverResponse, PlayerMoveResponse, StartGameResponse } from '../../../../shared/api-response.model'
+import { GameOverResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
 import { UndoRequest } from '../../../../shared/api-request.model'
 
 const API_URL = 'http://localhost:3000'
@@ -52,6 +52,11 @@ export class GameService {
           this.isGameOver = true
         })
 
+        this.socket.on(`undo:${this.gameId}`, (res: UndoResponse) => {
+          const { rowIndex, squareIndex } = res
+          this.board[rowIndex][squareIndex] = ''
+        })
+
       })
   }
 
@@ -59,6 +64,7 @@ export class GameService {
     if (!this.gameId) return
     this.socket.removeListener(`playerMove:${this.gameId}`)
     this.socket.removeListener(`gameOver:${this.gameId}`)
+    this.socket.removeListener(`undo:${this.gameId}`)
     this.http.get(`${API_URL}/game/${this.gameId}/finish`)
       .subscribe()
   }
@@ -82,7 +88,7 @@ export class GameService {
   }
 
   onSquareClick(rowIndex: number, squareIndex: number) {
-    if (this.isGameOver) {
+    if (this.isGameOver || this.board[rowIndex][squareIndex] != '') {
       return;
     }
 
