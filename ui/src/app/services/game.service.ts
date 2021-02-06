@@ -8,10 +8,10 @@ import { SocketMessage } from '../../../../shared/socket-message.model'
 })
 export class GameService {
 
-  boardSize: number = 5;
+  boardSize: number = 3;
   board: string[][] = []
   tour: number = 0;
-  flag: boolean = false;
+  isGameOver: boolean = false;
 
   private gameId: string
 
@@ -19,8 +19,6 @@ export class GameService {
     private readonly socket: Socket,
     private readonly http: HttpClient
   ) {
-    this.socket.on('message', (data: SocketMessage) => console.log(data))
-
     for (let i = 0; i < this.boardSize; i++) {
       const row: string[] = [];
       for (let j = 0; j < this.boardSize; j++) {
@@ -30,7 +28,6 @@ export class GameService {
     }
 
     this.startNewGame()
-
   }
 
   startNewGame() {
@@ -38,11 +35,26 @@ export class GameService {
       .subscribe((response: { gameId: string }) => {
         this.finishGame()
         this.gameId = response.gameId
+
+        this.socket.on(`playerMove:${this.gameId}`, (res: SocketMessage) => {
+          if (this.isGameOver) return
+          const { rowIndex, squareIndex, turn } = res
+          this.board[rowIndex][squareIndex] = turn
+        })
+
+
+        this.socket.on(`gameOver:${this.gameId}`, (res: { winner: 'X' | 'O' }) => {
+          console.log('winner is:', res.winner)
+          this.isGameOver = true
+        })
+
       })
   }
 
   finishGame() {
     if (!this.gameId) return
+    this.socket.removeListener(`playerMove:${this.gameId}`)
+    this.socket.removeListener(`gameOver:${this.gameId}`)
     this.http.get(`http://localhost:3000/game/${this.gameId}/finish`)
       .subscribe()
   }
@@ -54,19 +66,19 @@ export class GameService {
         this.board[i][j] = "";
       }
     }
-    this.flag = false;
+    this.isGameOver = false;
     this.tour = 0;
+    this.finishGame()
+    this.startNewGame()
   }
 
   onSquareClick(rowIndex: number, squareIndex: number) {
-    if (this.flag) {
+    if (this.isGameOver) {
       return;
     }
 
-    if (this.board[rowIndex][squareIndex] == '')
-      this.notifyApiWithPlayerMove(rowIndex, squareIndex)
-
-    console.log(rowIndex, squareIndex)
+    this.notifyApiWithPlayerMove(rowIndex, squareIndex)
+    return
     if (this.tour % 2 == 0) {
       if (this.board[rowIndex][squareIndex] == '') {
         this.board[rowIndex][squareIndex] = 'X';
@@ -90,12 +102,12 @@ export class GameService {
         }
         if (thereisawinner) {
           if (this.board[i][0] == 'X') {
-            this.flag = true;
+            this.isGameOver = true;
             console.log("1.oyuncu kazandı!");
             return;
           }
           else {
-            this.flag = true;
+            this.isGameOver = true;
             console.log("2.oyuncu kazandı!");
             return;
           }
@@ -113,12 +125,12 @@ export class GameService {
         }
         if (thereisawinner) {
           if (this.board[0][i] == 'X') {
-            this.flag = true;
+            this.isGameOver = true;
             console.log("1.oyuncu kazandı!");
             return;
           }
           else {
-            this.flag = true;
+            this.isGameOver = true;
             console.log("2.oyuncu kazandı!");
             return;
           }
@@ -135,12 +147,12 @@ export class GameService {
       }
       if (thereisawinner) {
         if (this.board[0][0] == 'X') {
-          this.flag = true;
+          this.isGameOver = true;
           console.log("1.oyuncu kazandı!");
           return;
         }
         else {
-          this.flag = true;
+          this.isGameOver = true;
           console.log("2.oyuncu kazandı!");
           return;
         }
@@ -156,12 +168,12 @@ export class GameService {
       }
       if (thereisawinner) {
         if (this.board[0][this.boardSize - 1] == 'X') {
-          this.flag = true;
+          this.isGameOver = true;
           console.log("1.oyuncu kazandı!");
           return;
         }
         else {
-          this.flag = true;
+          this.isGameOver = true;
           console.log("2.oyuncu kazandı!");
           return;
         }
@@ -170,7 +182,7 @@ export class GameService {
   }
 
   private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {
-    this.socket.emit('playerMove', { rowIndex, squareIndex })
+    this.socket.emit('playerMove', { rowIndex, squareIndex, gameId: this.gameId })
   }
 
 }

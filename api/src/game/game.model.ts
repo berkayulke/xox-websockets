@@ -57,7 +57,7 @@ export class Game {
 
   private getInvertedBoard(): Board {
     return this.board.reduce((acc, row) => {
-      row.forEach((val: BoardSquare, index) => acc[index].push('X'))
+      row.forEach((val: BoardSquare, index) => acc[index].push(val))
       return [...acc]
     }, Array.from({ length: this.boardSize }, () => [] as BoardRow))
   }
