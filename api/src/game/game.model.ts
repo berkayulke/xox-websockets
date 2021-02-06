@@ -23,9 +23,11 @@ export class Game {
     public boardSize = 3
   ) {
     this.board = []
-    for (let i = 0; i < this.boardSize; i++)
+    for (let i = 0; i < this.boardSize; i++) {
+      this.board[i] = []
       for (let j = 0; j < this.boardSize; j++)
-        this.board[i][j] = "";
+        this.board[i].push("")
+    }
   }
 
   private getWinner(): Player | null {

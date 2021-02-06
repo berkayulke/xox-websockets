@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { SocketMessage } from '../../../../shared/socket-message.model'
@@ -12,19 +13,38 @@ export class GameService {
   tour: number = 0;
   flag: boolean = false;
 
+  private gameId: string
+
   constructor(
-    private readonly socket: Socket
+    private readonly socket: Socket,
+    private readonly http: HttpClient
   ) {
     this.socket.on('message', (data: SocketMessage) => console.log(data))
 
     for (let i = 0; i < this.boardSize; i++) {
-      const row:string[] = [];
+      const row: string[] = [];
       for (let j = 0; j < this.boardSize; j++) {
         row.push('')
       }
       this.board.push(row);
     }
 
+    this.startNewGame()
+
+  }
+
+  startNewGame() {
+    this.http.post('http://localhost:3000/game/', { boardSize: this.boardSize })
+      .subscribe((response: { gameId: string }) => {
+        this.finishGame()
+        this.gameId = response.gameId
+      })
+  }
+
+  finishGame() {
+    if (!this.gameId) return
+    this.http.get(`http://localhost:3000/game/${this.gameId}/finish`)
+      .subscribe()
   }
 
   resetGame() {
@@ -59,89 +79,89 @@ export class GameService {
         this.tour++;
       }
     }
-    for(let i=0;i<this.boardSize;i++){
-      let thereisawinner : boolean = true;
-      if(this.board[i][0]!=''){
-        for(let j=1;j<this.boardSize;j++){
-          if(this.board[i][j]!=this.board[i][0]){
+    for (let i = 0; i < this.boardSize; i++) {
+      let thereisawinner: boolean = true;
+      if (this.board[i][0] != '') {
+        for (let j = 1; j < this.boardSize; j++) {
+          if (this.board[i][j] != this.board[i][0]) {
             thereisawinner = false;
             break;
           }
         }
-        if(thereisawinner){
-          if(this.board[i][0]=='X'){
-            this.flag=true;
+        if (thereisawinner) {
+          if (this.board[i][0] == 'X') {
+            this.flag = true;
             console.log("1.oyuncu kazandı!");
             return;
           }
-          else{
-            this.flag=true;
+          else {
+            this.flag = true;
             console.log("2.oyuncu kazandı!");
             return;
           }
         }
       }
     }
-    for(let i=0;i<this.boardSize;i++){
-      let thereisawinner : boolean = true;
-      if(this.board[0][i]!=''){
-        for(let j=1;j<this.boardSize;j++){
-          if(this.board[j][i]!=this.board[0][i]){
+    for (let i = 0; i < this.boardSize; i++) {
+      let thereisawinner: boolean = true;
+      if (this.board[0][i] != '') {
+        for (let j = 1; j < this.boardSize; j++) {
+          if (this.board[j][i] != this.board[0][i]) {
             thereisawinner = false;
             break;
           }
         }
-        if(thereisawinner){
-          if(this.board[0][i]=='X'){
-            this.flag=true;
+        if (thereisawinner) {
+          if (this.board[0][i] == 'X') {
+            this.flag = true;
             console.log("1.oyuncu kazandı!");
             return;
           }
-          else{
-            this.flag=true;
+          else {
+            this.flag = true;
             console.log("2.oyuncu kazandı!");
             return;
           }
         }
       }
     }
-    if(this.board[0][0]!=""){
-      let thereisawinner : boolean = true;
-      for(let i=1;i<this.boardSize;i++){
-        if(this.board[i][i]!=this.board[0][0]){
-          thereisawinner=false;
+    if (this.board[0][0] != "") {
+      let thereisawinner: boolean = true;
+      for (let i = 1; i < this.boardSize; i++) {
+        if (this.board[i][i] != this.board[0][0]) {
+          thereisawinner = false;
           break;
         }
       }
-      if(thereisawinner){
-        if(this.board[0][0]=='X'){
-          this.flag=true;
+      if (thereisawinner) {
+        if (this.board[0][0] == 'X') {
+          this.flag = true;
           console.log("1.oyuncu kazandı!");
           return;
         }
-        else{
-          this.flag=true;
+        else {
+          this.flag = true;
           console.log("2.oyuncu kazandı!");
           return;
         }
       }
     }
-    if(this.board[0][this.boardSize-1]!=""){
-      let thereisawinner : boolean = true;
-      for(let i=1;i<this.boardSize;i++){
-        if(this.board[i][this.boardSize-i-1]!=this.board[0][this.boardSize-1]){
-          thereisawinner=false;
+    if (this.board[0][this.boardSize - 1] != "") {
+      let thereisawinner: boolean = true;
+      for (let i = 1; i < this.boardSize; i++) {
+        if (this.board[i][this.boardSize - i - 1] != this.board[0][this.boardSize - 1]) {
+          thereisawinner = false;
           break;
         }
       }
-      if(thereisawinner){
-        if(this.board[0][this.boardSize-1]=='X'){
-          this.flag=true;
+      if (thereisawinner) {
+        if (this.board[0][this.boardSize - 1] == 'X') {
+          this.flag = true;
           console.log("1.oyuncu kazandı!");
           return;
         }
-        else{
-          this.flag=true;
+        else {
+          this.flag = true;
           console.log("2.oyuncu kazandı!");
           return;
         }

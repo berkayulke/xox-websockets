@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SocketIoModule } from 'ngx-socket-io';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
@@ -19,6 +20,7 @@ import { GameService } from './services/game.service';
   imports: [
     BrowserModule,
     CommonModule,
+    HttpClientModule,
     SocketIoModule.forRoot({ url: 'http://localhost:3000' })
   ],
   providers: [GameService],
