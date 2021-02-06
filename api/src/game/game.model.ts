@@ -37,8 +37,13 @@ export class Game {
     this.tour++
   }
 
-  undoLastMove() {
+  undoLastMove(): { rowIndex: number, squareIndex: number } {
     //TODO add undo logic
+    //return an with last move's row and square index
+    return {
+      rowIndex: 0,
+      squareIndex: 0
+    }
   }
 
   private changeTurns() {

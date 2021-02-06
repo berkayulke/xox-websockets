@@ -1,7 +1,7 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { GameOverResponse, PlayerMoveResponse } from '../../shared/api-response.model';
-import { PlayerMoveRequest } from '../../shared/api-request.model'
+import { GameOverResponse, PlayerMoveResponse, UndoResponse } from '../../shared/api-response.model';
+import { PlayerMoveRequest, UndoRequest } from '../../shared/api-request.model'
 import { GameService } from './game/game.service';
 
 @WebSocketGateway()
@@ -16,11 +16,9 @@ export class AppGateway {
   @SubscribeMessage('playerMove')
   onPlayerMove(@MessageBody() body: PlayerMoveRequest): void {
     const { rowIndex, squareIndex, gameId } = body
-    const game = this.gameService.getById(gameId)
-    if (!game) throw new Error("Can't find game")
+    const game = this.getGame(gameId)
 
-    if (game.isOver())
-      return
+    if (game.isOver()) return
 
     const playerMoveResponse: PlayerMoveResponse = {
       rowIndex,
@@ -35,6 +33,19 @@ export class AppGateway {
       const gameOverResponse: GameOverResponse = { winner: game.getWinner() }
       this.wss.emit(`gameOver:${gameId}`, gameOverResponse)
     }
+  }
+
+  @SubscribeMessage('undo')
+  onUndo(@MessageBody() body: UndoRequest): UndoResponse {
+    const game = this.getGame(body.gameId)
+    if (game.isOver()) return
+    return game.undoLastMove()
+  }
+
+  private getGame(id: string) {
+    const game = this.gameService.getById(id)
+    if (!game) throw new Error("Can't find game")
+    return game
   }
 
 }

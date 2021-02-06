@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Board, BoardRow } from '../../../../shared/game.types'
 import { GameOverResponse, PlayerMoveResponse, StartGameResponse } from '../../../../shared/api-response.model'
+import { UndoRequest } from '../../../../shared/api-request.model'
 
 const API_URL = 'http://localhost:3000'
 
@@ -73,6 +74,11 @@ export class GameService {
     this.tour = 0;
     this.finishGame()
     this.startNewGame()
+  }
+
+  undoLastMove() {
+    const undoRequest: UndoRequest = { gameId: this.gameId }
+    this.socket.emit('undo', undoRequest)
   }
 
   onSquareClick(rowIndex: number, squareIndex: number) {

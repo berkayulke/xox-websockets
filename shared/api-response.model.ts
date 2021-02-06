@@ -13,3 +13,8 @@ export interface PlayerMoveResponse {
 export interface GameOverResponse {
     winner: Player
 }
+
+export interface UndoResponse {
+    rowIndex: number
+    squareIndex: number
+}
