@@ -147,40 +147,6 @@ export class GameService {
         }
       }
     }
-    /*for (let i = 0; i < 3; i++) {
-      if (this.board[i][0] == "X" && this.board[i][0] == this.board[i][1] && this.board[i][0] == this.board[i][2]) {
-        console.log("1.oyuncu kazandi!");
-        this.flag = true;
-      }
-      if (this.board[i][0] == "O" && this.board[i][0] == this.board[i][1] && this.board[i][0] == this.board[i][2]) {
-        console.log("2.oyuncu kazandi!");
-        this.flag = true;
-      }
-      if (this.board[0][i] == "X" && this.board[0][i] == this.board[1][i] && this.board[0][i] == this.board[2][i]) {
-        console.log("1.oyuncu kazandi!");
-        this.flag = true;
-      }
-      if (this.board[0][i] == "O" && this.board[0][i] == this.board[1][i] && this.board[0][i] == this.board[2][i]) {
-        console.log("2.oyuncu kazandi!");
-        this.flag = true;
-      }
-    }
-    if (this.board[0][0] == "X" && this.board[0][0] == this.board[1][1] && this.board[0][0] == this.board[2][2]) {
-      console.log("1.oyuncu kazandi!");
-      this.flag = true;
-    }
-    if (this.board[0][0] == "O" && this.board[0][0] == this.board[1][1] && this.board[0][0] == this.board[2][2]) {
-      console.log("2.oyuncu kazandi!");
-      this.flag = true;
-    }
-    if (this.board[0][2] == "X" && this.board[0][2] == this.board[1][1] && this.board[0][2] == this.board[2][0]) {
-      console.log("1.oyuncu kazandi!");
-      this.flag = true;
-    }
-    if (this.board[0][2] == "O" && this.board[0][2] == this.board[1][1] && this.board[0][2] == this.board[2][0]) {
-      console.log("2.oyuncu kazandi!");
-      this.flag = true;
-    }*/
   }
 
   private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {

@@ -15,7 +15,6 @@ export class BoardRowComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.rowIndex)
   }
 
   onClick(squareIndex: number) {
