@@ -1,4 +1,13 @@
 .board-square {
-    height: 100%;
     width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    font-size: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.board-square:hover {
+    background-color: lightgrey;
 }

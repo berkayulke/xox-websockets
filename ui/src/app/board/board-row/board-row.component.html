@@ -1,8 +1,8 @@
 <div class="board-row-container">
 
-    <app-board-square class="board-square"
+    <app-board-square style="width: 100%;"
                       *ngFor="let square of gameService.board[rowIndex];let i=index"
-                      (onClick)="onClick(i)"
+                      (click)="onClick(i)"
                       [rowIndex]="rowIndex"
                       [squareIndex]="i"></app-board-square>
 
