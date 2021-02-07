@@ -13,7 +13,7 @@ const API_URL = 'http://localhost:3000'
   providedIn: 'root'
 })
 export class GameService {
-  boardSize: number = 3;
+  boardSize: number;
   board: Board = []
   isGameOver: boolean = false;
   isInGame = false
@@ -23,16 +23,18 @@ export class GameService {
   constructor(
     private readonly socket: Socket,
     private readonly http: HttpClient
-  ) {
+  ) {   
+  }
+
+  startNewGame(boardSize: string | number) {
+    this.boardSize = parseInt(boardSize.toString())
     for (let i = 0; i < this.boardSize; i++) {
       const row: BoardRow = [];
       for (let j = 0; j < this.boardSize; j++)
         row.push('')
       this.board.push(row);
     }
-  }
-
-  startNewGame() {
+    console.log(typeof boardSize)
     this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
       .subscribe((response: StartGameResponse) => {
         this.finishGame()
@@ -40,6 +42,8 @@ export class GameService {
         console.log('gameId -> ', this.gameId)
       })
   }
+
+  
 
   joinGameById(gameId: string): Observable<void> {
     return this.checkIfGameExist(gameId).pipe(map(isGameExist => {
@@ -67,7 +71,7 @@ export class GameService {
     }
     this.isGameOver = false;
     this.finishGame()
-    this.startNewGame()
+    this.startNewGame(this.boardSize)
   }
 
   undoLastMove() {
