@@ -1,1 +1,7 @@
-<p>join-game-screen works!</p>
+<div>
+    <button (click)="tryToJoinGame(gameIdInput.value.trim())">Join Game</button>
+    <label>Game Id:</label>
+    <input #gameIdInput
+           (keyup.enter)="tryToJoinGame(gameIdInput.value)">
+    <p *ngIf="errorMessage">{{errorMessage}}</p>
+</div>

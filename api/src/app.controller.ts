@@ -22,10 +22,10 @@ export class AppController {
 
   @Get(':gameId')
   checkIfGameExist(@Param('gameId') gameId: string): GetGameResponse {
-    const game = this.gameService.getById(gameId)
+    const game = this.gameService.getById(gameId)  
     return {
       isGameExist: !!game,
-      boardSize: game.boardSize
+      boardSize: game?.boardSize
     }
   }
 

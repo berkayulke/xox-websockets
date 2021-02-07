@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameService } from '../services/game.service';
 
 @Component({
   selector: 'app-join-game-screen',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class JoinGameScreenComponent implements OnInit {
 
-  constructor() { }
+  errorMessage: string
+
+  constructor(
+    public gameService: GameService
+  ) { }
 
   ngOnInit(): void {
   }
 
+  tryToJoinGame(gameId: string) {
+    this.gameService.joinGameById(gameId)
+      .subscribe({
+        error: err => this.errorMessage = err
+      })
+  }
 }
