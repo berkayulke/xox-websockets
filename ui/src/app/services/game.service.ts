@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Board, BoardRow } from '../../../../shared/game.types'
-import { GameOverResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
+import { GameOverResponse, IsGameExistResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
 import { UndoRequest } from '../../../../shared/api-request.model'
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const API_URL = 'http://localhost:3000'
 
@@ -36,17 +38,20 @@ export class GameService {
       .subscribe((response: StartGameResponse) => {
         this.finishGame()
         this.gameId = response.gameId
+        console.log('gameId -> ', this.gameId)
         this.initializeGameStateListeners()
         this.isInGame = true
       })
   }
 
-  joinGameById(gameId: string) {
-    console.log(gameId)
-    return
-    this.gameId = gameId
-    this.initializeGameStateListeners()
-    this.isInGame = true
+  joinGameById(gameId: string): Observable<void> {
+    return this.checkIfGameExist(gameId).pipe(map(isGameExist => {
+      if (!isGameExist)
+        throw new Error(`Can't find game with id ${gameId}`)
+      this.gameId = gameId
+      this.initializeGameStateListeners()
+      this.isInGame = true
+    }))
   }
 
   finishGame() {
@@ -206,6 +211,11 @@ export class GameService {
       const { rowIndex, squareIndex } = res
       this.board[rowIndex][squareIndex] = ''
     })
+  }
+
+  private checkIfGameExist(gameId: string): Observable<boolean> {
+    return this.http.get(`${API_URL}/game/${gameId}`)
+      .pipe(map((response: IsGameExistResponse) => response.isGameExist))
   }
 
 }
