@@ -49,6 +49,7 @@ export class Game {
   undoLastMove(): { rowIndex: number, squareIndex: number } {
     //TODO add undo logic
     //return last move's row and square index
+    if(this.tour==0) return
     let row = this.moves[this.moves.length - 1][0]
     let square = this.moves[this.moves.length - 1][1]
     this.moves.pop()

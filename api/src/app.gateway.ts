@@ -43,7 +43,9 @@ export class AppGateway {
   onUndo(@MessageBody() body: UndoRequest): void {
     const game = this.getGame(body.gameId)
     if (game.isOver()) return
-    this.wss.emit(`undo:${body.gameId}`, game.undoLastMove())
+    const lastMove = game.undoLastMove()
+    if (lastMove)
+      this.wss.emit(`undo:${body.gameId}`, lastMove)
   }
 
   private getGame(id: string) {
