@@ -5,7 +5,6 @@ export class Game {
 
   board: Board
   turn: Player = 'X'
-  tour = 1
   private moves: Array<Pair> = []
 
   isOver(): boolean {
@@ -39,22 +38,24 @@ export class Game {
 
     if (this.turn != player)
       throw "This is not your turn"
-      
+
     this.moves.push([rowIndex, squareIndex])
     this.board[rowIndex][squareIndex] = this.turn
     this.changeTurns()
-    this.tour++
   }
 
   undoLastMove(): { rowIndex: number, squareIndex: number } {
-    //TODO add undo logic
-    //return last move's row and square index
-    if(this.tour==0) return
+    if (this.moves.length == 0)
+      throw "There are no moves to undo"
+
     let row = this.moves[this.moves.length - 1][0]
     let square = this.moves[this.moves.length - 1][1]
+
+    if (this.board[row][square] == this.turn)
+      throw "You can't undo other player's move"
+
     this.moves.pop()
     this.changeTurns()
-    this.tour--
     this.board[row][square] = ''
     return {
       rowIndex: row,

@@ -15,7 +15,6 @@ const API_URL = 'http://localhost:3000'
 export class GameService {
   boardSize: number = 3;
   board: Board = []
-  tour: number = 0;
   isGameOver: boolean = false;
   isInGame = false
   gameId: string
@@ -68,21 +67,18 @@ export class GameService {
       }
     }
     this.isGameOver = false;
-    this.tour = 0;
     this.finishGame()
     this.startNewGame()
   }
 
   undoLastMove() {
     const undoRequest: UndoRequest = { gameId: this.gameId }
-    this.tour--
     this.socket.emit('undo', undoRequest)
   }
 
   onSquareClick(rowIndex: number, squareIndex: number) {
     if (this.isGameOver || this.board[rowIndex][squareIndex] != '')
       return
-    this.tour++
     this.notifyApiWithPlayerMove(rowIndex, squareIndex)
   }
 
