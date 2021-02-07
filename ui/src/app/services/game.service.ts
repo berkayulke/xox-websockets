@@ -11,7 +11,6 @@ const API_URL = 'http://localhost:3000'
   providedIn: 'root'
 })
 export class GameService {
-
   boardSize: number = 3;
   board: Board = []
   tour: number = 0;
@@ -45,7 +44,6 @@ export class GameService {
           const { rowIndex, squareIndex, turn } = res
           this.board[rowIndex][squareIndex] = turn
         })
-
 
         this.socket.on(`gameOver:${this.gameId}`, (res: GameOverResponse) => {
           console.log('winner is:', res.winner)

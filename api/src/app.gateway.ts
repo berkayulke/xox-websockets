@@ -1,6 +1,6 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { GameOverResponse, PlayerMoveResponse, UndoResponse } from '../../shared/api-response.model';
+import { GameOverResponse, PlayerMoveResponse } from '../../shared/api-response.model';
 import { PlayerMoveRequest, UndoRequest } from '../../shared/api-request.model'
 import { GameService } from './game/game.service';
 
