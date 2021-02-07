@@ -58,6 +58,44 @@ export class Game {
       If there is winner return 'X' or 'O'
       else return null
     */
+  for (let i = 0; i < this.boardSize; i++) {
+      let thereisawinner: boolean = true;
+      if (this.board[i][0] != '') {
+        for (let j = 1; j < this.boardSize; j++) {
+          if (this.board[i][j] != this.board[i][0]) {
+            thereisawinner = false;
+            break;
+          }
+        }
+        if (thereisawinner) {
+          if (this.board[i][0] == 'X') {
+            return 'X';
+          }
+          else {
+            return 'O';
+          }
+        }
+      }
+    }
+    for (let i = 0; i < this.boardSize; i++) {
+      let thereisawinner: boolean = true;
+      if (this.board[0][i] != '') {
+        for (let j = 1; j < this.boardSize; j++) {
+          if (this.board[j][i] != this.board[0][i]) {
+            thereisawinner = false;
+            break;
+          }
+        }
+        if (thereisawinner) {
+          if (this.board[0][i] == 'X') {
+            return 'X';
+          }
+          else {
+            return 'O';
+          }
+        }
+      }
+    }
     return null
   }
 
