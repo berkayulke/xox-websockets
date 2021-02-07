@@ -29,10 +29,13 @@ export class Game {
     return this._winner
   }
 
-  makeMove(rowIndex: number, squareIndex: number) {
-    if (this.board[rowIndex][squareIndex] != '') {
+  makeMove(rowIndex: number, squareIndex: number, player: Player) {
+    if (this.board[rowIndex][squareIndex] != '')
       throw new Error("Can't make a move here")
-    }
+
+    if (this.turn != player)
+      throw new Error("This is not your turn")
+
     this.board[rowIndex][squareIndex] = this.turn
     this.changeTurns()
     this.tour++

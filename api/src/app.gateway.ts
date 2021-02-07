@@ -14,8 +14,8 @@ export class AppGateway {
   ) { }
 
   @SubscribeMessage('playerMove')
-  onPlayerMove(@MessageBody() body: PlayerMoveRequest): void {
-    const { rowIndex, squareIndex, gameId } = body
+  onPlayerMove(@MessageBody() body: PlayerMoveRequest) {
+    const { rowIndex, squareIndex, gameId, player } = body
     const game = this.getGame(gameId)
 
     if (game.isOver()) return
@@ -23,11 +23,15 @@ export class AppGateway {
     const playerMoveResponse: PlayerMoveResponse = {
       rowIndex,
       squareIndex,
-      turn: game.turn
+      turn: player
     }
 
-    this.wss.emit(`playerMove:${gameId}`, playerMoveResponse)
-    game.makeMove(rowIndex, squareIndex)
+    try {
+      game.makeMove(rowIndex, squareIndex, player)
+      this.wss.emit(`playerMove:${gameId}`, playerMoveResponse)
+    } catch (err) {
+      return
+    }
 
     if (game.isOver()) {
       const gameOverResponse: GameOverResponse = { winner: game.getWinner() }

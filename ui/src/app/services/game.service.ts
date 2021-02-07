@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Board, BoardRow, Player } from '../../../../shared/game.types'
 import { GameOverResponse, IsGameExistResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
-import { UndoRequest } from '../../../../shared/api-request.model'
+import { PlayerMoveRequest, UndoRequest } from '../../../../shared/api-request.model'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -38,8 +38,8 @@ export class GameService {
     this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
       .subscribe((response: StartGameResponse) => {
         this.finishGame()
-        console.log('gameId -> ', this.gameId)
         this.enterGame(response.gameId, 'X');
+        console.log('gameId -> ', this.gameId)
       })
   }
 
@@ -188,14 +188,21 @@ export class GameService {
   }
 
   private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {
-    this.socket.emit('playerMove', { rowIndex, squareIndex, gameId: this.gameId })
+    const request: PlayerMoveRequest = {
+      rowIndex,
+      squareIndex,
+      gameId: this.gameId,
+      player: this.player
+    }
+    this.socket.emit('playerMove', request)
   }
 
   private enterGame(gameId: string, player: Player) {
     this.gameId = gameId;
     this.initializeGameStateListeners();
     this.isInGame = true;
-    this.player = 'X';
+    console.log('setting player to - >', player)
+    this.player = player;
   }
 
   private initializeGameStateListeners() {
