@@ -106,6 +106,40 @@ export class Game {
         }
       }
     }
+    if (this.board[0][0] != "") {
+      let thereisawinner: boolean = true;
+      for (let i = 1; i < this.boardSize; i++) {
+        if (this.board[i][i] != this.board[0][0]) {
+          thereisawinner = false;
+          break;
+        }
+      }
+      if (thereisawinner) {
+        if (this.board[0][0] == 'X') {
+          return 'X';
+        }
+        else {
+          return 'O';
+        }
+      }
+    }
+    if (this.board[0][this.boardSize - 1] != "") {
+      let thereisawinner: boolean = true;
+      for (let i = 1; i < this.boardSize; i++) {
+        if (this.board[i][this.boardSize - i - 1] != this.board[0][this.boardSize - 1]) {
+          thereisawinner = false;
+          break;
+        }
+      }
+      if (thereisawinner) {
+        if (this.board[0][this.boardSize - 1] == 'X') {
+          return 'X';
+        }
+        else {
+          return 'O';
+        }
+      }
+    }
     return null
   }
 

@@ -28,6 +28,7 @@ export class GameService {
 
   startNewGame(boardSize: string | number) {
     this.boardSize = parseInt(boardSize.toString())
+    if(this.boardSize<=0||this.boardSize!=NaN) return
     this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
       .subscribe((response: StartGameResponse) => {
         this.finishGame()

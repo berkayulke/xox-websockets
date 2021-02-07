@@ -9,7 +9,9 @@ export class AppController {
   ) { }
 
   @Post()
-  startGame(@Body('boardSize') boardSize: number): StartGameResponse {
+  startGame(@Body('boardSize') boardSize: number | string): StartGameResponse {
+    boardSize=parseInt(boardSize.toString())
+    if(boardSize<=0||boardSize==NaN) throw "Board size must be an positive integer";    
     return { gameId: this.gameService.createGame(boardSize) }
   }
 
