@@ -1,5 +1,5 @@
 import { Board, Player } from '../../../shared/game.types'
-type Pair = [number,number]
+type Pair = [number, number]
 
 export class Game {
 
@@ -33,8 +33,14 @@ export class Game {
     return this._winner
   }
 
-  makeMove(rowIndex: number, squareIndex: number) {
-    this.moves.push([rowIndex,squareIndex])
+  makeMove(rowIndex: number, squareIndex: number, player: Player) {
+    if (this.board[rowIndex][squareIndex] != '')
+      throw new Error("Can't make a move here")
+
+    if (this.turn != player)
+      throw new Error("This is not your turn")
+      
+    this.moves.push([rowIndex, squareIndex])
     this.board[rowIndex][squareIndex] = this.turn
     this.changeTurns()
     this.tour++
@@ -43,8 +49,8 @@ export class Game {
   undoLastMove(): { rowIndex: number, squareIndex: number } {
     //TODO add undo logic
     //return last move's row and square index
-    let row = this.moves[this.moves.length-1][0]
-    let square = this.moves[this.moves.length-1][1]
+    let row = this.moves[this.moves.length - 1][0]
+    let square = this.moves[this.moves.length - 1][1]
     this.moves.pop()
     this.changeTurns()
     this.tour--
