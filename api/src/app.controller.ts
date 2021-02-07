@@ -20,9 +20,7 @@ export class AppController {
 
   @Get(':gameId')
   checkIfGameExist(@Param('gameId') gameId: string): { isGameExist: boolean } {
-    return {
-      isGameExist: !!this.gameService.getById(gameId)
-    }
+    return { isGameExist: !!this.gameService.getById(gameId) }
   }
 
 }
