@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { Board, BoardRow } from '../../../../shared/game.types'
+import { Board, BoardRow, Player } from '../../../../shared/game.types'
 import { GameOverResponse, IsGameExistResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
 import { UndoRequest } from '../../../../shared/api-request.model'
 import { Observable } from 'rxjs';
@@ -19,6 +19,7 @@ export class GameService {
   isGameOver: boolean = false;
   isInGame = false
 
+  private player: Player
   private gameId: string
 
   constructor(
@@ -37,10 +38,8 @@ export class GameService {
     this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
       .subscribe((response: StartGameResponse) => {
         this.finishGame()
-        this.gameId = response.gameId
         console.log('gameId -> ', this.gameId)
-        this.initializeGameStateListeners()
-        this.isInGame = true
+        this.enterGame(response.gameId, 'X');
       })
   }
 
@@ -48,9 +47,7 @@ export class GameService {
     return this.checkIfGameExist(gameId).pipe(map(isGameExist => {
       if (!isGameExist)
         throw new Error(`Can't find game with id ${gameId}`)
-      this.gameId = gameId
-      this.initializeGameStateListeners()
-      this.isInGame = true
+      this.enterGame(gameId, 'O')
     }))
   }
 
@@ -192,6 +189,13 @@ export class GameService {
 
   private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {
     this.socket.emit('playerMove', { rowIndex, squareIndex, gameId: this.gameId })
+  }
+
+  private enterGame(gameId: string, player: Player) {
+    this.gameId = gameId;
+    this.initializeGameStateListeners();
+    this.isInGame = true;
+    this.player = 'X';
   }
 
   private initializeGameStateListeners() {
