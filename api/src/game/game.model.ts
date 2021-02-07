@@ -1,16 +1,14 @@
 import { Board, Player } from '../../../shared/game.types'
 
 export class Game {
-
   board: Board
   turn: Player = 'X'
-  tour = 1
+  tour = 0
+  private _winner: Player
 
   isOver(): boolean {
     return !!this.getWinner()
   }
-
-  private _winner: Player
 
   constructor(
     public id: string,
@@ -31,7 +29,13 @@ export class Game {
     return this._winner
   }
 
-  makeMove(rowIndex: number, squareIndex: number) {
+  makeMove(rowIndex: number, squareIndex: number, player: Player) {
+    if (this.board[rowIndex][squareIndex] != '')
+      throw new Error("Can't make a move here")
+
+    if (this.turn != player)
+      throw new Error("This is not your turn")
+
     this.board[rowIndex][squareIndex] = this.turn
     this.changeTurns()
     this.tour++
@@ -39,6 +43,7 @@ export class Game {
 
   undoLastMove(): { rowIndex: number, squareIndex: number } {
     //TODO add undo logic
+    //Cant undo if game is over
     //return last move's row and square index
     this.changeTurns()
     this.tour--

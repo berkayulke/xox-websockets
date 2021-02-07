@@ -9,6 +9,7 @@ import { BoardComponent } from './board/board.component';
 import { BoardRowComponent } from './board/board-row/board-row.component';
 import { BoardSquareComponent } from './board/board-row/board-square/board-square.component';
 import { GameService } from './services/game.service';
+import { StartScreenComponent } from './start-screen/start-screen.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { GameService } from './services/game.service';
     BoardComponent,
     BoardRowComponent,
     BoardSquareComponent,
+    StartScreenComponent,
   ],
   imports: [
     BrowserModule,
