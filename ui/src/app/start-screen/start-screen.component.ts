@@ -7,7 +7,8 @@ import { GameService } from '../services/game.service';
   styleUrls: ['./start-screen.component.scss']
 })
 export class StartScreenComponent implements OnInit {
-
+  joinGame: boolean = false
+  createGame: boolean = false
   errorMessage: string
 
   constructor(

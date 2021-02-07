@@ -10,6 +10,8 @@ import { BoardRowComponent } from './board/board-row/board-row.component';
 import { BoardSquareComponent } from './board/board-row/board-square/board-square.component';
 import { GameService } from './services/game.service';
 import { StartScreenComponent } from './start-screen/start-screen.component';
+import { JoinGameScreenComponent } from './join-game-screen/join-game-screen.component';
+import { CreateGameScreenComponent } from './create-game-screen/create-game-screen.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { StartScreenComponent } from './start-screen/start-screen.component';
     BoardRowComponent,
     BoardSquareComponent,
     StartScreenComponent,
+    JoinGameScreenComponent,
+    CreateGameScreenComponent,
   ],
   imports: [
     BrowserModule,

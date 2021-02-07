@@ -1,0 +1,4 @@
+<button (click)="gameService.startNewGame(boardSize.value.trim())">Start New Game</button>
+    <label>Board Size:</label>
+    <input #boardSize
+            (keyup.enter)="gameService.startNewGame(gameService.boardSize)">
