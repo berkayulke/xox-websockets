@@ -46,7 +46,7 @@ export class AppGateway {
     const game = this.getGame(body.gameId)
     if (game.isOver()) return
     try {
-      const lastMove = game.undoLastMove()
+      const lastMove = game.undoLastMove(body.player)
       if (lastMove)
         this.wss.emit(`undo:${body.gameId}`, lastMove)
     } catch (er) {

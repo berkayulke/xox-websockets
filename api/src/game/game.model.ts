@@ -44,14 +44,14 @@ export class Game {
     this.changeTurns()
   }
 
-  undoLastMove(): { rowIndex: number, squareIndex: number } {
+  undoLastMove(player: Player): { rowIndex: number, squareIndex: number } {
     if (this.moves.length == 0)
       throw "There are no moves to undo"
 
     let row = this.moves[this.moves.length - 1][0]
     let square = this.moves[this.moves.length - 1][1]
 
-    if (this.board[row][square] == this.turn)
+    if (this.board[row][square] == this.turn || player == this.turn)
       throw "You can't undo other player's move"
 
     this.moves.pop()

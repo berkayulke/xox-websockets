@@ -9,4 +9,5 @@ export interface PlayerMoveRequest {
 
 export interface UndoRequest {
   gameId: string
+  player: Player
 }

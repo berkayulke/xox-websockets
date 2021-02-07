@@ -72,7 +72,7 @@ export class GameService {
   }
 
   undoLastMove() {
-    const undoRequest: UndoRequest = { gameId: this.gameId }
+    const undoRequest: UndoRequest = { gameId: this.gameId, player: this.player }
     this.socket.emit('undo', undoRequest)
   }
 
