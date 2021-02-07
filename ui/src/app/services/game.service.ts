@@ -75,116 +75,15 @@ export class GameService {
 
   undoLastMove() {
     const undoRequest: UndoRequest = { gameId: this.gameId }
+    this.tour--
     this.socket.emit('undo', undoRequest)
   }
 
   onSquareClick(rowIndex: number, squareIndex: number) {
-    if (this.isGameOver || this.board[rowIndex][squareIndex] != '') {
-      return;
-    }
-
+    if (this.isGameOver || this.board[rowIndex][squareIndex] != '')
+      return
+    this.tour++
     this.notifyApiWithPlayerMove(rowIndex, squareIndex)
-    return
-    if (this.tour % 2 == 0) {
-      if (this.board[rowIndex][squareIndex] == '') {
-        this.board[rowIndex][squareIndex] = 'X';
-        this.tour++;
-      }
-    }
-    else {
-      if (this.board[rowIndex][squareIndex] == '') {
-        this.board[rowIndex][squareIndex] = 'O';
-        this.tour++;
-      }
-    }
-    for (let i = 0; i < this.boardSize; i++) {
-      let thereisawinner: boolean = true;
-      if (this.board[i][0] != '') {
-        for (let j = 1; j < this.boardSize; j++) {
-          if (this.board[i][j] != this.board[i][0]) {
-            thereisawinner = false;
-            break;
-          }
-        }
-        if (thereisawinner) {
-          if (this.board[i][0] == 'X') {
-            this.isGameOver = true;
-            console.log("1.oyuncu kazandı!");
-            return;
-          }
-          else {
-            this.isGameOver = true;
-            console.log("2.oyuncu kazandı!");
-            return;
-          }
-        }
-      }
-    }
-    for (let i = 0; i < this.boardSize; i++) {
-      let thereisawinner: boolean = true;
-      if (this.board[0][i] != '') {
-        for (let j = 1; j < this.boardSize; j++) {
-          if (this.board[j][i] != this.board[0][i]) {
-            thereisawinner = false;
-            break;
-          }
-        }
-        if (thereisawinner) {
-          if (this.board[0][i] == 'X') {
-            this.isGameOver = true;
-            console.log("1.oyuncu kazandı!");
-            return;
-          }
-          else {
-            this.isGameOver = true;
-            console.log("2.oyuncu kazandı!");
-            return;
-          }
-        }
-      }
-    }
-    if (this.board[0][0] != "") {
-      let thereisawinner: boolean = true;
-      for (let i = 1; i < this.boardSize; i++) {
-        if (this.board[i][i] != this.board[0][0]) {
-          thereisawinner = false;
-          break;
-        }
-      }
-      if (thereisawinner) {
-        if (this.board[0][0] == 'X') {
-          this.isGameOver = true;
-          console.log("1.oyuncu kazandı!");
-          return;
-        }
-        else {
-          this.isGameOver = true;
-          console.log("2.oyuncu kazandı!");
-          return;
-        }
-      }
-    }
-    if (this.board[0][this.boardSize - 1] != "") {
-      let thereisawinner: boolean = true;
-      for (let i = 1; i < this.boardSize; i++) {
-        if (this.board[i][this.boardSize - i - 1] != this.board[0][this.boardSize - 1]) {
-          thereisawinner = false;
-          break;
-        }
-      }
-      if (thereisawinner) {
-        if (this.board[0][this.boardSize - 1] == 'X') {
-          this.isGameOver = true;
-          console.log("1.oyuncu kazandı!");
-          return;
-        }
-        else {
-          this.isGameOver = true;
-          console.log("2.oyuncu kazandı!");
-          return;
-        }
-      }
-    }
   }
 
   private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {

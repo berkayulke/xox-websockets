@@ -30,6 +30,8 @@ export class AppGateway {
       game.makeMove(rowIndex, squareIndex, player)
       this.wss.emit(`playerMove:${gameId}`, playerMoveResponse)
     } catch (err) {
+      console.log(`Got the following error while player ${player} tried to make a move -> `)
+      console.error(err)
       return
     }
 

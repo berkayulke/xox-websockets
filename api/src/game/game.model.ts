@@ -35,10 +35,10 @@ export class Game {
 
   makeMove(rowIndex: number, squareIndex: number, player: Player) {
     if (this.board[rowIndex][squareIndex] != '')
-      throw new Error("Can't make a move here")
+      throw "Can't make a move here"
 
     if (this.turn != player)
-      throw new Error("This is not your turn")
+      throw "This is not your turn"
       
     this.moves.push([rowIndex, squareIndex])
     this.board[rowIndex][squareIndex] = this.turn
@@ -55,6 +55,7 @@ export class Game {
     this.moves.pop()
     this.changeTurns()
     this.tour--
+    this.board[row][square] = ''
     return {
       rowIndex: row,
       squareIndex: square
