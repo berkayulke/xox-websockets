@@ -1,14 +1,18 @@
 import { Board, Player } from '../../../shared/game.types'
+type Pair = [number,number]
 
 export class Game {
+
   board: Board
   turn: Player = 'X'
-  tour = 0
-  private _winner: Player
+  tour = 1
+  private moves: Array<Pair> = []
 
   isOver(): boolean {
     return !!this.getWinner()
   }
+
+  private _winner: Player
 
   constructor(
     public id: string,
@@ -29,13 +33,8 @@ export class Game {
     return this._winner
   }
 
-  makeMove(rowIndex: number, squareIndex: number, player: Player) {
-    if (this.board[rowIndex][squareIndex] != '')
-      throw new Error("Can't make a move here")
-
-    if (this.turn != player)
-      throw new Error("This is not your turn")
-
+  makeMove(rowIndex: number, squareIndex: number) {
+    this.moves.push([rowIndex,squareIndex])
     this.board[rowIndex][squareIndex] = this.turn
     this.changeTurns()
     this.tour++
@@ -43,13 +42,15 @@ export class Game {
 
   undoLastMove(): { rowIndex: number, squareIndex: number } {
     //TODO add undo logic
-    //Cant undo if game is over
     //return last move's row and square index
+    let row = this.moves[this.moves.length-1][0]
+    let square = this.moves[this.moves.length-1][1]
+    this.moves.pop()
     this.changeTurns()
     this.tour--
     return {
-      rowIndex: 0,
-      squareIndex: 0
+      rowIndex: row,
+      squareIndex: square
     }
   }
 
@@ -58,12 +59,7 @@ export class Game {
   }
 
   private findWinner(): Player | null {
-    /*
-      TODO move winner finding logic here
-      If there is winner return 'X' or 'O'
-      else return null
-    */
-  for (let i = 0; i < this.boardSize; i++) {
+    for (let i = 0; i < this.boardSize; i++) {
       let thereisawinner: boolean = true;
       if (this.board[i][0] != '') {
         for (let j = 1; j < this.boardSize; j++) {
