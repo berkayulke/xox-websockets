@@ -18,3 +18,7 @@ export interface UndoResponse {
     rowIndex: number
     squareIndex: number
 }
+
+export interface IsGameExistResponse {
+    isGameExist: boolean
+}

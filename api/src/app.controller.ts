@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GameService } from './game/game.service';
-import { StartGameResponse } from '../../shared/api-response.model'
+import { IsGameExistResponse, StartGameResponse } from '../../shared/api-response.model'
 
 @Controller('game')
 export class AppController {
@@ -19,7 +19,7 @@ export class AppController {
   }
 
   @Get(':gameId')
-  checkIfGameExist(@Param('gameId') gameId: string): { isGameExist: boolean } {
+  checkIfGameExist(@Param('gameId') gameId: string): IsGameExistResponse {
     return { isGameExist: !!this.gameService.getById(gameId) }
   }
 
