@@ -19,6 +19,7 @@ export interface UndoResponse {
     squareIndex: number
 }
 
-export interface IsGameExistResponse {
+export interface GetGameResponse {
     isGameExist: boolean
+    boardSize: number
 }

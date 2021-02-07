@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { Board, BoardRow, Player } from '../../../../shared/game.types'
-import { GameOverResponse, IsGameExistResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
+import { GameOverResponse, GetGameResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
 import { PlayerMoveRequest, UndoRequest } from '../../../../shared/api-request.model'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ThisReceiver } from '@angular/compiler';
 
 const API_URL = 'http://localhost:3000'
 
@@ -23,18 +24,11 @@ export class GameService {
   constructor(
     private readonly socket: Socket,
     private readonly http: HttpClient
-  ) {   
+  ) {
   }
 
   startNewGame(boardSize: string | number) {
     this.boardSize = parseInt(boardSize.toString())
-    for (let i = 0; i < this.boardSize; i++) {
-      const row: BoardRow = [];
-      for (let j = 0; j < this.boardSize; j++)
-        row.push('')
-      this.board.push(row);
-    }
-    console.log(typeof boardSize)
     this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
       .subscribe((response: StartGameResponse) => {
         this.finishGame()
@@ -43,12 +37,11 @@ export class GameService {
       })
   }
 
-  
-
   joinGameById(gameId: string): Observable<void> {
-    return this.checkIfGameExist(gameId).pipe(map(isGameExist => {
-      if (!isGameExist)
+    return this.getGameFromApi(gameId).pipe(map(gameResponse => {
+      if (!gameResponse.isGameExist)
         throw new Error(`Can't find game with id ${gameId}`)
+      this.boardSize = gameResponse.boardSize
       this.enterGame(gameId, 'O')
     }))
   }
@@ -98,8 +91,8 @@ export class GameService {
   private enterGame(gameId: string, player: Player) {
     this.gameId = gameId;
     this.initializeGameStateListeners();
+    this.initializeBoard();
     this.isInGame = true;
-    console.log('setting player to - >', player)
     this.player = player;
   }
 
@@ -122,9 +115,17 @@ export class GameService {
     })
   }
 
-  private checkIfGameExist(gameId: string): Observable<boolean> {
-    return this.http.get(`${API_URL}/game/${gameId}`)
-      .pipe(map((response: IsGameExistResponse) => response.isGameExist))
+  private getGameFromApi(gameId: string): Observable<GetGameResponse> {
+    return this.http.get<GetGameResponse>(`${API_URL}/game/${gameId}`)
+  }
+
+  private initializeBoard() {
+    for (let i = 0; i < this.boardSize; i++) {
+      const row: BoardRow = [];
+      for (let j = 0; j < this.boardSize; j++)
+        row.push('');
+      this.board.push(row);
+    }
   }
 
 }
