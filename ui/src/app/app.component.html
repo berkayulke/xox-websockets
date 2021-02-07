@@ -1,6 +1,11 @@
 <div [style.height.px]="gameService.boardSize*100"
-     [style.width.px]="gameService.boardSize*100">
+     [style.width.px]="gameService.boardSize*100"
+     *ngIf="gameService.isInGame">
     <app-board></app-board>
     <button (click)="gameService.resetGame()">Reset Game</button>
     <button (click)="gameService.undoLastMove()">Undo Last Move</button>
+</div>
+
+<div *ngIf="!gameService.isInGame">
+    <app-start-screen></app-start-screen>
 </div>

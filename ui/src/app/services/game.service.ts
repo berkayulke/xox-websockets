@@ -15,6 +15,7 @@ export class GameService {
   board: Board = []
   tour: number = 0;
   isGameOver: boolean = false;
+  isInGame = false
 
   private gameId: string
 
@@ -24,13 +25,10 @@ export class GameService {
   ) {
     for (let i = 0; i < this.boardSize; i++) {
       const row: BoardRow = [];
-      for (let j = 0; j < this.boardSize; j++) {
+      for (let j = 0; j < this.boardSize; j++)
         row.push('')
-      }
       this.board.push(row);
     }
-
-    this.startNewGame()
   }
 
   startNewGame() {
@@ -38,24 +36,17 @@ export class GameService {
       .subscribe((response: StartGameResponse) => {
         this.finishGame()
         this.gameId = response.gameId
-
-        this.socket.on(`playerMove:${this.gameId}`, (res: PlayerMoveResponse) => {
-          if (this.isGameOver) return
-          const { rowIndex, squareIndex, turn } = res
-          this.board[rowIndex][squareIndex] = turn
-        })
-
-        this.socket.on(`gameOver:${this.gameId}`, (res: GameOverResponse) => {
-          console.log('winner is:', res.winner)
-          this.isGameOver = true
-        })
-
-        this.socket.on(`undo:${this.gameId}`, (res: UndoResponse) => {
-          const { rowIndex, squareIndex } = res
-          this.board[rowIndex][squareIndex] = ''
-        })
-
+        this.initializeGameStateListeners()
+        this.isInGame = true
       })
+  }
+
+  joinGameById(gameId: string) {
+    console.log(gameId)
+    return
+    this.gameId = gameId
+    this.initializeGameStateListeners()
+    this.isInGame = true
   }
 
   finishGame() {
@@ -64,7 +55,7 @@ export class GameService {
     this.socket.removeListener(`gameOver:${this.gameId}`)
     this.socket.removeListener(`undo:${this.gameId}`)
     this.http.get(`${API_URL}/game/${this.gameId}/finish`)
-      .subscribe()
+      .subscribe(() => this.isInGame = false)
   }
 
   resetGame() {
@@ -196,6 +187,25 @@ export class GameService {
 
   private notifyApiWithPlayerMove(rowIndex: number, squareIndex: number) {
     this.socket.emit('playerMove', { rowIndex, squareIndex, gameId: this.gameId })
+  }
+
+  private initializeGameStateListeners() {
+    this.socket.on(`playerMove:${this.gameId}`, (res: PlayerMoveResponse) => {
+      if (this.isGameOver) return
+      const { rowIndex, squareIndex, turn } = res
+      this.board[rowIndex][squareIndex] = turn
+    })
+
+    this.socket.on(`gameOver:${this.gameId}`, (res: GameOverResponse) => {
+      console.log('winner is:', res.winner)
+      //TODO display it to user
+      this.isGameOver = true
+    })
+
+    this.socket.on(`undo:${this.gameId}`, (res: UndoResponse) => {
+      const { rowIndex, squareIndex } = res
+      this.board[rowIndex][squareIndex] = ''
+    })
   }
 
 }
