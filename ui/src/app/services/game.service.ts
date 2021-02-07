@@ -6,7 +6,6 @@ import { GameOverResponse, GetGameResponse, PlayerMoveResponse, StartGameRespons
 import { PlayerMoveRequest, UndoRequest } from '../../../../shared/api-request.model'
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ThisReceiver } from '@angular/compiler';
 
 const API_URL = 'http://localhost:3000'
 
