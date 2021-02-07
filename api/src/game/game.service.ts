@@ -21,7 +21,7 @@ export class GameService {
   }
 
   private generateId(): string {
-    return Math.random().toString()
+    return Math.random().toString().substr(2, 3)
   }
 
 }
