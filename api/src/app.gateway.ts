@@ -27,7 +27,7 @@ export class AppGateway {
     }
 
     try {
-      game.makeMove(rowIndex, squareIndex, player)
+      game.makeMove(rowIndex, squareIndex)
       this.wss.emit(`playerMove:${gameId}`, playerMoveResponse)
     } catch (err) {
       return
