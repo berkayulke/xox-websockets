@@ -1,7 +1,6 @@
 <div>
-    <p *ngIf="!!errorMessage">{{errorMessage}}</p>
     <button (click)="gameService.startNewGame()">Start New Game</button>
-    <button (click)="tryToJoinGame(gameIdInput.value)">Join Game</button>
+    <button (click)="tryToJoinGame(gameIdInput.value.trim())">Join Game</button>
     <label>Game Id:</label>
     <input #gameIdInput
            (keyup.enter)="tryToJoinGame(gameIdInput.value)">
