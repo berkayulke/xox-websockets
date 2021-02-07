@@ -18,8 +18,7 @@ export class GameService {
   isGameOver: boolean = false;
   isInGame = false
   gameId: string
-
-  private player: Player
+  player: Player
 
   constructor(
     private readonly socket: Socket,

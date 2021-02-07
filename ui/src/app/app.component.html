@@ -1,5 +1,6 @@
 <ng-container *ngIf="gameService.isInGame">
     <p>Game Id: {{gameService.gameId}}</p>
+    <p>You are: {{gameService.player}}</p>
     <div [style.height.px]="gameService.boardSize*100"
          [style.width.px]="gameService.boardSize*100">
         <app-board></app-board>
