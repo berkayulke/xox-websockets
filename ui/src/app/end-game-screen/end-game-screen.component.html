@@ -1,0 +1,12 @@
+<div *ngIf="gameService._winner==gameService.player">
+    <p>YOU WON!</p>
+    <p></p>
+    <button (click)="gameService.resetGame()">Reset Game</button>
+</div>
+
+<div *ngIf="gameService._winner!=gameService.player">
+    <p>YOU LOST!</p>
+    <p></p>
+    <button (click)="gameService.resetGame()">Reset Game</button>
+</div>
+

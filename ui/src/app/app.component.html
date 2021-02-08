@@ -1,4 +1,4 @@
-<ng-container *ngIf="gameService.isInGame">
+<ng-container *ngIf="gameService.isInGame&&!gameService.isGameOver">
     <p>Game Id: {{gameService.gameId}}</p>
     <p>You are: {{gameService.player}}</p>
     <div [style.height.px]="gameService.boardSize*100"
@@ -11,4 +11,8 @@
 
 <div *ngIf="!gameService.isInGame">
     <app-start-screen></app-start-screen>
+</div>
+
+<div *ngIf="gameService.isGameOver">
+    <app-end-game-screen></app-end-game-screen>
 </div>

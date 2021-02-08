@@ -15,6 +15,7 @@ const API_URL = 'http://localhost:3000'
 export class GameService {
   boardSize: number;
   board: Board = []
+  _winner: Player
   isGameOver: boolean = false;
   isInGame = false
   gameId: string
@@ -106,6 +107,7 @@ export class GameService {
     this.socket.on(`gameOver:${this.gameId}`, (res: GameOverResponse) => {
       console.log('winner is:', res.winner)
       //TODO display it to user
+      this._winner=res.winner
       this.isGameOver = true
     })
 

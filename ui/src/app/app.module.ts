@@ -12,6 +12,7 @@ import { GameService } from './services/game.service';
 import { StartScreenComponent } from './start-screen/start-screen.component';
 import { JoinGameScreenComponent } from './join-game-screen/join-game-screen.component';
 import { CreateGameScreenComponent } from './create-game-screen/create-game-screen.component';
+import { EndGameScreenComponent } from './end-game-screen/end-game-screen.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CreateGameScreenComponent } from './create-game-screen/create-game-scre
     StartScreenComponent,
     JoinGameScreenComponent,
     CreateGameScreenComponent,
+    EndGameScreenComponent,
   ],
   imports: [
     BrowserModule,
