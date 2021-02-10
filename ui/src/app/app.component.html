@@ -4,7 +4,6 @@
     <div [style.height.px]="gameService.boardSize*100"
          [style.width.px]="gameService.boardSize*100">
         <app-board></app-board>
-        <button (click)="gameService.resetGame()">Reset Game</button>
         <button (click)="gameService.undoLastMove()">Undo Last Move</button>
     </div>
 </ng-container>
