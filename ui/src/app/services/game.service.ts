@@ -4,8 +4,8 @@ import { Socket } from 'ngx-socket-io';
 import { Board, BoardRow, Player } from '../../../../shared/game.types'
 import { GameOverResponse, GetGameResponse, PlayerMoveResponse, StartGameResponse, UndoResponse } from '../../../../shared/api-response.model'
 import { PlayerMoveRequest, UndoRequest } from '../../../../shared/api-request.model'
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 
 const API_URL = 'http://localhost:3000'
 
@@ -27,15 +27,15 @@ export class GameService {
   ) {
   }
 
-  startNewGame(boardSize: string | number) {
+  startNewGame(boardSize: string | number): Observable<null> {
     this.boardSize = parseInt(boardSize.toString())
-    if(this.boardSize<=0||this.boardSize==NaN) return
-    this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
-      .subscribe((response: StartGameResponse) => {
-        this.finishGame()
-        this.enterGame(response.gameId, 'X');
-        console.log('gameId -> ', this.gameId)
-      })
+    if (this.boardSize <= 0 || this.boardSize == NaN) return
+    const obs = this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
+      .pipe(shareReplay());
+    obs.subscribe((response: StartGameResponse) => {
+      this.finishGame().subscribe(() => this.enterGame(response.gameId, 'X'))
+    })
+    return obs.pipe(shareReplay(), map(() => null))
   }
 
   joinGameById(gameId: string): Observable<void> {
@@ -47,25 +47,21 @@ export class GameService {
     }))
   }
 
-  finishGame() {
-    if (!this.gameId) return
+  finishGame(): Observable<null> {
+    if (!this.gameId) return of(null)
     this.socket.removeListener(`playerMove:${this.gameId}`)
     this.socket.removeListener(`gameOver:${this.gameId}`)
     this.socket.removeListener(`undo:${this.gameId}`)
-    this.http.get(`${API_URL}/game/${this.gameId}/finish`)
-      .subscribe(() => this.isInGame = false)
+    const obs = this.http.get(`${API_URL}/game/${this.gameId}/finish`)
+      .pipe(shareReplay());
+
+    obs.subscribe(() => this.isInGame = false)
+    return obs.pipe(shareReplay(), map(() => null))
   }
 
   resetGame() {
-    console.log("Yeniden başlatılyor...");
-    for (let i = 0; i < this.boardSize; i++) {
-      for (let j = 0; j < this.boardSize; j++) {
-        this.board[i][j] = "";
-      }
-    }
     this.isGameOver = false;
-    this.finishGame()
-    this.startNewGame(this.boardSize)
+    this.finishGame().subscribe(() => this.startNewGame(this.boardSize))
   }
 
   undoLastMove() {
@@ -106,8 +102,7 @@ export class GameService {
 
     this.socket.on(`gameOver:${this.gameId}`, (res: GameOverResponse) => {
       console.log('winner is:', res.winner)
-      //TODO display it to user
-      this._winner=res.winner
+      this._winner = res.winner
       this.isGameOver = true
     })
 
@@ -122,6 +117,7 @@ export class GameService {
   }
 
   private initializeBoard() {
+    this.board = []
     for (let i = 0; i < this.boardSize; i++) {
       const row: BoardRow = [];
       for (let j = 0; j < this.boardSize; j++)
