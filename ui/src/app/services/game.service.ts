@@ -6,8 +6,7 @@ import { GameOverResponse, GetGameResponse, PlayerMoveResponse, StartGameRespons
 import { PlayerMoveRequest, UndoRequest } from '../../../../shared/api-request.model'
 import { Observable, of } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-
-const API_URL = 'http://localhost:3000'
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +20,8 @@ export class GameService {
   gameId: string
   player: Player
 
+  private readonly API_URL = environment.apiUrl
+
   constructor(
     private readonly socket: Socket,
     private readonly http: HttpClient
@@ -30,7 +31,7 @@ export class GameService {
   startNewGame(boardSize: string | number): Observable<null> {
     this.boardSize = parseInt(boardSize.toString())
     if (this.boardSize <= 0 || this.boardSize == NaN) return
-    const obs = this.http.post(`${API_URL}/game/`, { boardSize: this.boardSize })
+    const obs = this.http.post(`${this.API_URL}/game/`, { boardSize: this.boardSize })
       .pipe(shareReplay());
     obs.subscribe((response: StartGameResponse) => {
       this.finishGame().subscribe(() => this.enterGame(response.gameId, 'X'))
@@ -52,7 +53,7 @@ export class GameService {
     this.socket.removeListener(`playerMove:${this.gameId}`)
     this.socket.removeListener(`gameOver:${this.gameId}`)
     this.socket.removeListener(`undo:${this.gameId}`)
-    const obs = this.http.get(`${API_URL}/game/${this.gameId}/finish`)
+    const obs = this.http.get(`${this.API_URL}/game/${this.gameId}/finish`)
       .pipe(shareReplay());
 
     obs.subscribe(() => this.isInGame = false)
@@ -113,7 +114,7 @@ export class GameService {
   }
 
   private getGameFromApi(gameId: string): Observable<GetGameResponse> {
-    return this.http.get<GetGameResponse>(`${API_URL}/game/${gameId}`)
+    return this.http.get<GetGameResponse>(`${this.API_URL}/game/${gameId}`)
   }
 
   private initializeBoard() {

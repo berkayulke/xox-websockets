@@ -13,6 +13,7 @@ import { StartScreenComponent } from './start-screen/start-screen.component';
 import { JoinGameScreenComponent } from './join-game-screen/join-game-screen.component';
 import { CreateGameScreenComponent } from './create-game-screen/create-game-screen.component';
 import { EndGameScreenComponent } from './end-game-screen/end-game-screen.component';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { EndGameScreenComponent } from './end-game-screen/end-game-screen.compon
     BrowserModule,
     CommonModule,
     HttpClientModule,
-    SocketIoModule.forRoot({ url: 'http://localhost:3000' })
+    SocketIoModule.forRoot({ url: environment.apiUrl })
   ],
   providers: [GameService],
   bootstrap: [AppComponent]
