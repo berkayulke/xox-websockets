@@ -45,6 +45,11 @@ export class GameService {
         throw new Error(`Can't find game with id ${gameId}`)
       this.boardSize = gameResponse.boardSize
       this.enterGame(gameId, 'O')
+      if (
+        gameResponse.firstMoveRowIndex != null &&
+        gameResponse.firstMoveSquareIndex != null
+      )
+        this.board[gameResponse.firstMoveRowIndex][gameResponse.firstMoveSquareIndex] = 'X'
     }))
   }
 

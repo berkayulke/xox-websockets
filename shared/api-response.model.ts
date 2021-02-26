@@ -22,4 +22,6 @@ export interface UndoResponse {
 export interface GetGameResponse {
     isGameExist: boolean
     boardSize: number
+    firstMoveRowIndex?: number
+    firstMoveSquareIndex?: number
 }

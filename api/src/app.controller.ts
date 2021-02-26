@@ -10,8 +10,8 @@ export class AppController {
 
   @Post()
   startGame(@Body('boardSize') boardSize: number | string): StartGameResponse {
-    boardSize=parseInt(boardSize.toString())
-    if(boardSize<=0||boardSize==NaN) throw "Board size must be an positive integer";    
+    boardSize = parseInt(boardSize.toString())
+    if (boardSize <= 0 || boardSize == NaN) throw "Board size must be an positive integer";
     return { gameId: this.gameService.createGame(boardSize) }
   }
 
@@ -21,11 +21,13 @@ export class AppController {
   }
 
   @Get(':gameId')
-  checkIfGameExist(@Param('gameId') gameId: string): GetGameResponse {
-    const game = this.gameService.getById(gameId)  
+  joinGame(@Param('gameId') gameId: string): GetGameResponse {
+    const game = this.gameService.getById(gameId)
     return {
       isGameExist: !!game,
-      boardSize: game?.boardSize
+      boardSize: game?.boardSize,
+      firstMoveRowIndex: game?.getLastMove()?.rowIndex,
+      firstMoveSquareIndex: game?.getLastMove()?.squareIndex
     }
   }
 

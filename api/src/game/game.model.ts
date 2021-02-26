@@ -25,6 +25,15 @@ export class Game {
     }
   }
 
+  getLastMove() {
+    if (this.moves.length == 0)
+      return null
+    return {
+      rowIndex: this.moves[this.moves.length - 1][0],
+      squareIndex: this.moves[this.moves.length - 1][1],
+    }
+  }
+
   getWinner(): Player | null {
     if (!this._winner) {
       this._winner = this.findWinner()
